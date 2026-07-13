@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+enum SyncStatus {
+  PENDING
+  SYNCED
+  FAILED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+
+  ownedDocuments Document[]       @relation("DocumentOwner")
+  collaborations DocumentMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Document {
+  id      String @id @default(cuid())
+  title   String
+  content Json
+
+  ownerId String
+  owner   User @relation("DocumentOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  currentVersion Int @default(1)
+
+  members   DocumentMember[]
+  versions  DocumentVersion[]
+  syncQueue SyncOperation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId])
+  @@map("documents")
+}
+
+model DocumentMember {
+  id String @id @default(cuid())
+
+  documentId String
+  userId     String
+
+  role Role
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([documentId, userId])
+  @@index([userId])
+  @@map("document_members")
+}
+
+model DocumentVersion {
+  id String @id @default(cuid())
+
+  documentId String
+
+  version Int
+
+  content Json
+
+  createdBy String
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([documentId, version])
+  @@index([documentId])
+  @@map("document_versions")
+}
+
+model SyncOperation {
+  id String @id @default(cuid())
+
+  documentId String
+
+  operation Json
+
+  status SyncStatus @default(PENDING)
+
+  syncedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([status])
+  @@map("sync_operations")
+}
