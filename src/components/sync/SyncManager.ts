@@ -9,9 +9,9 @@ export default function SyncManager() {
     const isOnline = useOnlineStatus();
 
     useEffect(() => {
-        if (isOnline) {
-            syncPendingChanges();
-        }
+        if (!isOnline) return;
+
+        syncPendingChanges();
     }, [isOnline]);
 
     return null;

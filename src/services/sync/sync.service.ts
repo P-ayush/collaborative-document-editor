@@ -1,13 +1,19 @@
 import { api } from "@/lib/api";
 import { db } from "@/lib/dexie";
 
+import {
+    clearQueueItem,
+    getPendingQueue,
+} from "./queue.service";
+
 export async function syncPendingChanges() {
-    const queue = await db.queue.orderBy("createdAt").toArray();
+    const queue = await getPendingQueue();
 
     for (const item of queue) {
         try {
             await api("/api/sync", {
                 method: "POST",
+
                 body: JSON.stringify({
                     documentId: item.documentId,
                     operation: item.operation,
@@ -20,10 +26,11 @@ export async function syncPendingChanges() {
             });
 
             if (item.id) {
-                await db.queue.delete(item.id);
+                await clearQueueItem(item.id);
             }
         } catch (error) {
             console.error("Sync failed", error);
+
             break;
         }
     }

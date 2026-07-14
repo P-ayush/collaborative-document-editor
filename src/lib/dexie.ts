@@ -1,14 +1,5 @@
 import Dexie, { Table } from "dexie";
-
-export interface LocalDocument {
-    id: string;
-    title: string;
-    content: any;
-    version: number;
-    updatedAt: Date;
-    synced: boolean;
-    deleted: boolean;
-}
+import type { LocalDocument } from "@/types/document";
 
 export interface SyncQueue {
     id?: number;

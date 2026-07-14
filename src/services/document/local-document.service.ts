@@ -1,7 +1,8 @@
-import { db, LocalDocument, SyncQueue } from "@/lib/dexie";
+import { db } from "@/lib/dexie";
+import type { LocalDocument } from "@/types/document";
+import { enqueueSync } from "@/services/sync/queue.service";
 
 export async function saveLocalDocument(document: LocalDocument) {
-
     await db.documents.put({
         ...document,
         synced: false,
@@ -25,8 +26,6 @@ export async function updateLocalDocument(
     id: string,
     updates: Partial<LocalDocument>
 ) {
-    console.log("Saving locally...", id, updates);
-
     await db.documents.update(id, {
         ...updates,
         synced: false,
@@ -54,18 +53,4 @@ export async function deleteLocalDocument(id: string) {
         payload: {},
         createdAt: new Date(),
     });
-}
-
-export async function enqueueSync(
-    item: Omit<SyncQueue, "id">
-) {
-    return db.queue.add(item);
-}
-
-export async function getPendingQueue() {
-    return db.queue.toArray();
-}
-
-export async function clearQueueItem(id: number) {
-    return db.queue.delete(id);
 }
