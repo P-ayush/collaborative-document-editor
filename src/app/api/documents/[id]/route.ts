@@ -38,6 +38,17 @@ export async function GET(
         id,
         session.user.id
     );
+    if (!document) {
+        return NextResponse.json(
+            {
+                success: false,
+                message: "Document not found",
+            },
+            {
+                status: 404,
+            }
+        );
+    }
 
     return NextResponse.json({
         success: true,

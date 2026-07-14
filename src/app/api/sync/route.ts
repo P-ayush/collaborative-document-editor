@@ -5,6 +5,9 @@ import { Prisma } from "@prisma/client";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { syncSchema } from "@/validations/sync";
+import { canEditDocument } from "@/services/auth/permission.service";
+
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
@@ -23,20 +26,37 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
+        const result = syncSchema.safeParse(body);
+
+        if (!result.success) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Invalid payload",
+                    errors: result.error.flatten(),
+                },
+                {
+                    status: 400,
+                }
+            );
+        }
+
         const {
             documentId,
             operation,
             payload,
-        } = body;
+        } = result.data;
 
-        if (!documentId || !operation) {
+        const payloadSize = JSON.stringify(payload).length;
+
+        if (payloadSize > 500000) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Invalid request",
+                    message: "Payload too large",
                 },
                 {
-                    status: 400,
+                    status: 413,
                 }
             );
         }
@@ -55,45 +75,54 @@ export async function POST(request: NextRequest) {
                     );
                 }
 
-                const updatedDocument = await prisma.$transaction(async (tx) => {
-                    const existingDocument = await tx.document.findFirst({
-                        where: {
-                            id: documentId,
-                            members: {
-                                some: {
-                                    userId: session.user.id,
+                const allowed = await canEditDocument(
+                    documentId,
+                    session.user.id
+                );
+
+                if (!allowed) {
+                    return NextResponse.json(
+                        {
+                            success: false,
+                            message:
+                                "You don't have permission to edit this document.",
+                        },
+                        {
+                            status: 403,
+                        }
+                    );
+                }
+
+                const updatedDocument = await prisma.$transaction(
+                    async (tx) => {
+                        const document =
+                            await tx.document.update({
+                                where: {
+                                    id: documentId,
                                 },
-                            },
-                        },
-                    });
+                                data: {
+                                    content:
+                                        payload.content as Prisma.InputJsonValue,
+                                    currentVersion: {
+                                        increment: 1,
+                                    },
+                                },
+                            });
 
-                    if (!existingDocument) {
-                        throw new Error("Document not found");
+                        await tx.documentVersion.create({
+                            data: {
+                                documentId: document.id,
+                                version:
+                                    document.currentVersion,
+                                content:
+                                    payload.content as Prisma.InputJsonValue,
+                                createdBy: session.user.id,
+                            },
+                        });
+
+                        return document;
                     }
-
-                    const document = await tx.document.update({
-                        where: {
-                            id: documentId,
-                        },
-                        data: {
-                            content: payload.content,
-                            currentVersion: {
-                                increment: 1,
-                            },
-                        },
-                    });
-
-                    await tx.documentVersion.create({
-                        data: {
-                            documentId: document.id,
-                            version: document.currentVersion,
-                            content: payload.content as Prisma.InputJsonValue,
-                            createdBy: session.user.id,
-                        },
-                    });
-
-                    return document;
-                });
+                );
 
                 return NextResponse.json({
                     success: true,
@@ -101,8 +130,10 @@ export async function POST(request: NextRequest) {
                         id: updatedDocument.id,
                         title: updatedDocument.title,
                         content: updatedDocument.content,
-                        currentVersion: updatedDocument.currentVersion,
-                        updatedAt: updatedDocument.updatedAt,
+                        currentVersion:
+                            updatedDocument.currentVersion,
+                        updatedAt:
+                            updatedDocument.updatedAt,
                     },
                 });
             }

@@ -42,6 +42,10 @@ export function useOfflineDocument(id: string) {
             `/api/documents/${id}`
         );
 
+        if (!response.data) {
+            throw new Error("Document not found");
+        }
+
         return mapServerDocument(response.data);
     }, [id]);
 

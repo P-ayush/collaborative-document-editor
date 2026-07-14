@@ -26,6 +26,7 @@ export default function DocumentPage() {
         <main className="mx-auto max-w-6xl p-8">
             <EditorHeader
                 document={{
+                    id: document.id,
                     title: document.title,
                     currentVersion: document.version,
                 }}
