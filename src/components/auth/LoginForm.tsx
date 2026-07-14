@@ -30,7 +30,7 @@ export default function LoginForm() {
     async function onSubmit(data: LoginInput) {
         setLoading(true);
         setError("");
-
+        console.log("Submitting Login");
         const result = await signIn("credentials", {
             email: data.email,
             password: data.password,
@@ -40,12 +40,15 @@ export default function LoginForm() {
         setLoading(false);
 
         if (result?.error) {
-            setError(result.error);
-            return;
+            if (result?.error) {
+                setError("Invalid email or password");
+                return;
+            } return;
         }
-
-        router.push("/dashboard");
-        router.refresh();
+        if (result?.ok) {
+            router.push("/dashboard");
+            router.refresh();
+        }
     }
 
     return (
