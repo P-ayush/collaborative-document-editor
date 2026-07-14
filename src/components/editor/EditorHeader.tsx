@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 
 import ShareDialog from "@/components/collaboration/ShareDialog";
+import ConnectionStatus from "@/components/common/ConnectionStatus";
 
 import { useUpdateDocument } from "@/hooks/document/useUpdateDocument";
 
@@ -65,15 +66,21 @@ export default function EditorHeader({
                     className="border-none p-0 text-3xl font-bold shadow-none focus-visible:ring-0"
                 />
 
-                <p className="text-muted-foreground">
-                    Version{" "}
-                    {document.currentVersion}
-                </p>
+                <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>
+                        Version {document.currentVersion}
+                    </span>
+
+                </div>
             </div>
 
-            <ShareDialog
-                documentId={document.id}
-            />
+            <div className="flex items-center gap-3">
+                <ConnectionStatus />
+
+                <ShareDialog
+                    documentId={document.id}
+                />
+            </div>
         </div>
     );
 }
