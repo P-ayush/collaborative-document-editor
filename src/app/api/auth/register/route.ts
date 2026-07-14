@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { registerSchema } from "@/validations/auth";
-import { registerUser } from "@/services/auth.service";
+import { registerUser } from "@/services/auth/auth.service";
 
 export async function POST(request: NextRequest) {
   try {

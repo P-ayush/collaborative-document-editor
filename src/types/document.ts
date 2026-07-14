@@ -27,3 +27,13 @@ export interface OfflineDocument {
     synced: boolean;
     deleted: boolean;
 }
+
+export interface LocalDocument {
+    id: string;
+    title: string;
+    content: Record<string, unknown>;
+    version: number;
+    updatedAt: Date;
+    synced: boolean;
+    deleted: boolean;
+}
