@@ -1,4 +1,4 @@
-import { comparePassword, getUserByEmail } from "@/services/auth.service";
+import { comparePassword, getUserByEmail } from "@/services/auth/auth.service";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -23,20 +23,14 @@ export const authOptions: NextAuthOptions = {
             },
 
             async authorize(credentials) {
-                console.log("Authorize called");
-                console.log(credentials);
 
                 if (!credentials?.email || !credentials?.password) {
-                    console.log("Missing credentials");
-                    throw new Error("Email and password are required");
+                    return null;
                 }
 
                 const user = await getUserByEmail(credentials.email);
 
-                console.log("User from DB:", user);
-
                 if (!user) {
-                    console.log("User not found");
                     return null;
                 }
 
@@ -45,7 +39,6 @@ export const authOptions: NextAuthOptions = {
                     user.password
                 );
 
-                console.log("Password valid:", isPasswordValid);
 
                 if (!isPasswordValid) {
                     return null;
