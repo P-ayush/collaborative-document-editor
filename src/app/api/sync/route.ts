@@ -97,7 +97,13 @@ export async function POST(request: NextRequest) {
 
                 return NextResponse.json({
                     success: true,
-                    data: updatedDocument,
+                    data: {
+                        id: updatedDocument.id,
+                        title: updatedDocument.title,
+                        content: updatedDocument.content,
+                        currentVersion: updatedDocument.currentVersion,
+                        updatedAt: updatedDocument.updatedAt,
+                    },
                 });
             }
 

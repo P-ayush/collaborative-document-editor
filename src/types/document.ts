@@ -37,3 +37,15 @@ export interface LocalDocument {
     synced: boolean;
     deleted: boolean;
 }
+
+export interface DocumentVersion {
+    id: string;
+    version: number;
+    createdAt: string;
+    createdBy: string;
+}
+
+export interface DocumentVersionsResponse {
+    success: boolean;
+    data: DocumentVersion[];
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -35,8 +36,7 @@ export default function DocumentEditor({
     );
 
     const initialContent =
-        content &&
-            Object.keys(content).length > 0
+        content && Object.keys(content).length > 0
             ? content
             : EMPTY_DOCUMENT;
 
@@ -56,6 +56,18 @@ export default function DocumentEditor({
             saveDocument(editor.getJSON());
         },
     });
+
+    useEffect(() => {
+        if (!editor) return;
+
+        const current = editor.getJSON();
+
+        if (JSON.stringify(current) !== JSON.stringify(initialContent)) {
+            editor.commands.setContent(initialContent, {
+                emitUpdate: false,
+            });
+        }
+    }, [editor, initialContent]);
 
     if (!editor) {
         return null;
