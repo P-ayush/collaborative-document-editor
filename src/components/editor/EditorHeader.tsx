@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 
 import ShareDialog from "@/components/collaboration/ShareDialog";
 import ConnectionStatus from "@/components/common/ConnectionStatus";
+import VersionHistoryDialog from "@/components/editor/VersionHistoryDialog";
 
 import { useUpdateDocument } from "@/hooks/document/useUpdateDocument";
 
@@ -68,14 +69,18 @@ export default function EditorHeader({
 
                 <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
                     <span>
-                        Version {document.currentVersion}
+                        Version{" "}
+                        {document.currentVersion}
                     </span>
-
                 </div>
             </div>
 
             <div className="flex items-center gap-3">
                 <ConnectionStatus />
+
+                <VersionHistoryDialog
+                    documentId={document.id}
+                />
 
                 <ShareDialog
                     documentId={document.id}

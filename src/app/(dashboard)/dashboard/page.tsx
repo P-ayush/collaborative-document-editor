@@ -5,7 +5,7 @@ import DocumentList from "@/components/dashboard/DocumentList";
 
 export default function DashboardPage() {
     return (
-        <main className="mx-auto max-w-7xl p-8">
+        <>
             <DashboardHeader />
 
             <div className="mt-8 flex items-center justify-between">
@@ -23,6 +23,6 @@ export default function DashboardPage() {
             <div className="mt-8">
                 <DocumentList />
             </div>
-        </main>
+        </>
     );
 }

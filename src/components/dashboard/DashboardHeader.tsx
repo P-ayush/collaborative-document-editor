@@ -1,4 +1,3 @@
-import LogoutButton from "../auth/LogoutButton";
 
 export default function DashboardHeader() {
   return (
@@ -12,8 +11,6 @@ export default function DashboardHeader() {
           Local First Collaborative Editor
         </p>
       </div>
-
-      <LogoutButton />
     </header>
   );
 }

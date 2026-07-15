@@ -46,7 +46,7 @@ export default function LoginForm() {
             } return;
         }
         if (result?.ok) {
-            router.push("/dashboard");
+            router.push("/");
             router.refresh();
         }
     }
