@@ -58,14 +58,13 @@ export default function DocumentList({
                     />
                 ))}
             </div>
-
-            <Pagination
-                page={data.pagination.page}
-                totalPages={
-                    data.pagination.totalPages
-                }
-                onPageChange={setPage}
-            />
+            <div className="mt-10 flex justify-center">
+                <Pagination
+                    page={data.pagination.page}
+                    totalPages={data.pagination.totalPages}
+                    onPageChange={setPage}
+                />
+            </div>
         </>
     );
 }
