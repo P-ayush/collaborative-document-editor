@@ -1,9 +1,15 @@
+"use client";
+
+import { useState } from "react";
+
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import CreateDocumentButton from "@/components/dashboard/CreateDocumentButton";
 import SearchBar from "@/components/dashboard/SearchBar";
 import DocumentList from "@/components/dashboard/DocumentList";
 
 export default function DashboardPage() {
+    const [search, setSearch] = useState("");
+
     return (
         <>
             <DashboardHeader />
@@ -17,11 +23,16 @@ export default function DashboardPage() {
             </div>
 
             <div className="mt-6">
-                <SearchBar />
+                <SearchBar
+                    value={search}
+                    onChange={setSearch}
+                />
             </div>
 
             <div className="mt-8">
-                <DocumentList />
+                <DocumentList
+                    search={search}
+                />
             </div>
         </>
     );

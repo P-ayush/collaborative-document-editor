@@ -38,7 +38,8 @@ export async function createDocument(
 export async function getDocuments(
     userId: string,
     page: number,
-    limit: number
+    limit: number,
+    search?: string
 ) {
     const skip = (page - 1) * limit;
 
@@ -48,30 +49,40 @@ export async function getDocuments(
                 userId,
             },
         },
+
+        ...(search
+            ? {
+                title: {
+                    contains: search,
+                    mode: "insensitive" as const,
+                },
+            }
+            : {}),
     };
 
-    const [documents, total] = await Promise.all([
-        prisma.document.findMany({
-            where,
-            skip,
-            take: limit,
+    const [documents, total] =
+        await Promise.all([
+            prisma.document.findMany({
+                where,
+                skip,
+                take: limit,
 
-            orderBy: {
-                updatedAt: "desc",
-            },
+                orderBy: {
+                    updatedAt: "desc",
+                },
 
-            select: {
-                id: true,
-                title: true,
-                currentVersion: true,
-                updatedAt: true,
-            },
-        }),
+                select: {
+                    id: true,
+                    title: true,
+                    currentVersion: true,
+                    updatedAt: true,
+                },
+            }),
 
-        prisma.document.count({
-            where,
-        }),
-    ]);
+            prisma.document.count({
+                where,
+            }),
+        ]);
 
     return {
         data: documents,
@@ -80,7 +91,9 @@ export async function getDocuments(
             page,
             limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(
+                total / limit
+            ),
         },
     };
 }

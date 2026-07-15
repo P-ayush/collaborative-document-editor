@@ -2,10 +2,22 @@
 
 import { Input } from "@/components/ui/input";
 
-export default function SearchBar() {
+interface Props {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function SearchBar({
+  value,
+  onChange,
+}: Props) {
   return (
     <Input
       placeholder="Search documents..."
+      value={value}
+      onChange={(e) =>
+        onChange(e.target.value)
+      }
     />
   );
 }

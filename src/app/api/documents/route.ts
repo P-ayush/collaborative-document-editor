@@ -25,14 +25,22 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    const page = Number(searchParams.get("page") ?? 1);
+    const page = Number(
+        searchParams.get("page") ?? 1
+    );
 
-    const limit = Number(searchParams.get("limit") ?? 10);
+    const limit = Number(
+        searchParams.get("limit") ?? 10
+    );
+
+    const search =
+        searchParams.get("search") ?? "";
 
     const result = await getDocuments(
         session.user.id,
         page,
-        limit
+        limit,
+        search
     );
 
     return NextResponse.json({

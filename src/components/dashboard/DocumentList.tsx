@@ -7,10 +7,17 @@ import { useDocuments } from "@/hooks/document/useDocuments";
 import DocumentCard from "./DocumentCard";
 import Pagination from "@/components/common/Pagination";
 
-export default function DocumentList() {
+interface Props {
+    search: string;
+}
+
+export default function DocumentList({
+    search,
+}: Props) {
     const [page, setPage] = useState(1);
 
-    const { data, isLoading } = useDocuments(page, 10);
+    const { data, isLoading } =
+        useDocuments(page, 10, search);
 
     if (isLoading) {
         return <p>Loading...</p>;
@@ -33,9 +40,11 @@ export default function DocumentList() {
 
             <Pagination
                 page={data.pagination.page}
-                totalPages={data.pagination.totalPages}
+                totalPages={
+                    data.pagination.totalPages
+                }
                 onPageChange={setPage}
             />
         </>
     );
-}  
+}
