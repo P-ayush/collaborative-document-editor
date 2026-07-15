@@ -1,14 +1,16 @@
 "use client";
 
+import { History } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 
 import VersionHistory from "./VersionHistory";
 
@@ -20,24 +22,32 @@ export default function VersionHistoryDialog({
     documentId,
 }: Props) {
     return (
-        <Dialog>
-            <DialogTrigger
-                render={<Button variant="outline" />}
-            >
-                Version History
-            </DialogTrigger>
-
-            <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>
+        <Sheet>
+            <SheetTrigger
+                render={
+                    <Button variant="outline">
+                        <History className="mr-2 h-4 w-4" />
                         Version History
-                    </DialogTitle>
-                </DialogHeader>
+                    </Button>
+                }
+            />
 
-                <VersionHistory
-                    documentId={documentId}
-                />
-            </DialogContent>
-        </Dialog>
+            <SheetContent
+                side="right"
+                className="w-[550px] sm:w-[650px]"
+            >
+                <SheetHeader>
+                    <SheetTitle>
+                        Version History
+                    </SheetTitle>
+                </SheetHeader>
+
+                <div className="mt-6">
+                    <VersionHistory
+                        documentId={documentId}
+                    />
+                </div>
+            </SheetContent>
+        </Sheet>
     );
 }

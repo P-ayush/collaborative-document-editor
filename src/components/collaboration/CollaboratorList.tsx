@@ -42,9 +42,21 @@ export default function CollaboratorList({
 
     if (isLoading) {
         return (
-            <p className="text-sm text-muted-foreground">
-                Loading collaborators...
-            </p>
+            <div className="animate-pulse space-y-4">
+                {[1, 2, 3].map((item) => (
+                    <div
+                        key={item}
+                        className="flex items-center justify-between rounded-lg border p-4"
+                    >
+                        <div>
+                            <div className="mb-2 h-5 w-36 rounded-md bg-muted" />
+                            <div className="h-4 w-48 rounded-md bg-muted" />
+                        </div>
+
+                        <div className="h-9 w-28 rounded-md bg-muted" />
+                    </div>
+                ))}
+            </div>
         );
     }
 

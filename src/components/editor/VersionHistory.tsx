@@ -1,8 +1,11 @@
 "use client";
 
-import { History } from "lucide-react";
-import { useRouter } from "next/navigation";
+import {
+    Clock3,
+    RotateCcw,
+} from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { useDocumentVersions } from "@/hooks/document/useDocumentVersions";
@@ -15,8 +18,6 @@ interface Props {
 export default function VersionHistory({
     documentId,
 }: Props) {
-    const router = useRouter();
-
     const { data, isLoading } =
         useDocumentVersions(documentId);
 
@@ -25,86 +26,97 @@ export default function VersionHistory({
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center py-10">
-                <p className="text-sm text-muted-foreground">
-                    Loading versions...
-                </p>
+            <div className="space-y-4">
+                {[1, 2, 3, 4, 5].map(
+                    (item) => (
+                        <div
+                            key={item}
+                            className="h-20 animate-pulse rounded-xl bg-muted"
+                        />
+                    )
+                )}
             </div>
         );
     }
 
     if (!data?.data.length) {
         return (
-            <div className="flex items-center justify-center py-10">
-                <p className="text-sm text-muted-foreground">
-                    No versions found.
-                </p>
+            <div className="rounded-xl border border-dashed py-12 text-center">
+                No versions found.
             </div>
         );
     }
 
-    const currentVersion = Math.max(
-        ...data.data.map((v) => v.version)
-    );
-
     return (
-        <div className="space-y-4">
-            {data.data.map((version) => {
-                const isCurrent =
-                    version.version === currentVersion;
-
-                return (
+        <div className="max-h-[75vh] space-y-3 overflow-y-auto pr-2">
+            {data.data.map(
+                (version, index) => (
                     <div
                         key={version.id}
-                        className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/40"
+                        className={`rounded-xl border p-4 transition ${index === 0
+                                ? "border-primary bg-primary/5"
+                                : ""
+                            }`}
                     >
-                        <div className="flex items-center gap-3">
-                            <History className="h-5 w-5 text-muted-foreground" />
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="rounded-full bg-muted p-2">
+                                    <Clock3 className="h-4 w-4" />
+                                </div>
 
-                            <div>
-                                <p className="font-medium">
-                                    Version {version.version}
-                                </p>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <h4 className="font-semibold">
+                                            Version{" "}
+                                            {
+                                                version.version
+                                            }
+                                        </h4>
 
-                                <p className="text-sm text-muted-foreground">
-                                    {new Date(
-                                        version.createdAt
-                                    ).toLocaleString()}
-                                </p>
+                                        {index ===
+                                            0 && (
+                                                <Badge>
+                                                    Current
+                                                </Badge>
+                                            )}
+                                    </div>
+
+                                    <p className="text-sm text-muted-foreground">
+                                        {new Date(
+                                            version.createdAt
+                                        ).toLocaleString()}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
 
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={restore.isPending || isCurrent}
-                            onClick={() =>
-                                restore.mutate(
-                                    {
-                                        documentId,
-                                        versionId: version.id,
-                                    },
-                                    {
-                                        onSuccess() {
-                                            router.refresh();
-
-                                            setTimeout(() => {
-                                                window.location.reload();
-                                            }, 300);
-                                        },
+                            {index !== 0 && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled={
+                                        restore.isPending
                                     }
-                                )
-                            }
-                        >
-                            {isCurrent
-                                ? "Current"
-                                : restore.isPending
-                                    ? "Restoring..."
-                                    : "Restore"}
-                        </Button>
+                                    onClick={() =>
+                                        restore.mutate(
+                                            {
+                                                documentId,
+                                                versionId:
+                                                    version.id,
+                                            }
+                                        )
+                                    }
+                                >
+                                    <RotateCcw className="mr-2 h-4 w-4" />
+
+                                    {restore.isPending
+                                        ? "Restoring..."
+                                        : "Restore"}
+                                </Button>
+                            )}
+                        </div>
                     </div>
-                );
-            })}
+                )
+            )}
         </div>
     );
 }

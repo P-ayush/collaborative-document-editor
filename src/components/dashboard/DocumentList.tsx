@@ -20,11 +20,32 @@ export default function DocumentList({
         useDocuments(page, 10, search);
 
     if (isLoading) {
-        return <p>Loading...</p>;
+        return (
+            <div className="animate-pulse space-y-4">
+                {[1, 2, 3, 4].map((item) => (
+                    <div
+                        key={item}
+                        className="rounded-xl border p-5"
+                    >
+                        <div className="mb-3 h-6 w-52 rounded-md bg-muted" />
+                        <div className="mb-2 h-4 w-36 rounded-md bg-muted" />
+                        <div className="h-4 w-24 rounded-md bg-muted" />
+                    </div>
+                ))}
+            </div>
+        );
     }
 
     if (!data?.data.length) {
-        return <p>No documents found.</p>;
+        return <div className="rounded-xl border border-dashed py-16 text-center">
+            <h3 className="text-lg font-semibold">
+                No documents found
+            </h3>
+
+            <p className="mt-2 text-muted-foreground">
+                Create your first document to get started.
+            </p>
+        </div>;
     }
 
     return (
