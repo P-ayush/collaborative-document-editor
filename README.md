@@ -1,36 +1,286 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📄 SyncDocs
 
-## Getting Started
+> A modern, local-first collaborative document editor built with **Next.js**, **TypeScript**, **Prisma**, **PostgreSQL**, **Dexie**, **React Query**, and **Gemini AI**.
 
-First, run the development server:
+SyncDocs enables users to create, edit, collaborate, and manage documents with offline support, version history, and AI-powered summaries.
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication
+
+- User Registration
+- User Login
+- Secure session management with NextAuth
+- Protected routes and APIs
+
+### 📄 Document Management
+
+- Create documents
+- Rename documents
+- Delete documents
+- Search documents
+- Pagination
+
+### ✍️ Rich Text Editor
+
+- Built with TipTap
+- Auto-save
+- Version tracking
+- Local-first editing
+
+### 📦 Offline First
+
+- Local storage using Dexie.js
+- Continue editing while offline
+- Automatic synchronization when back online
+
+### 🔄 Sync Engine
+
+- Local queue for offline operations
+- Background synchronization
+- Connection status indicator
+
+### 👥 Collaboration
+
+- Share documents
+- Add collaborators
+- Update collaborator roles
+- Remove collaborators
+
+### 🕒 Version History
+
+- Automatic document versioning
+- View previous versions
+- Restore any version
+
+### 🤖 AI Features
+
+- AI-powered document summaries
+- Copy summary to clipboard
+- Loading skeletons
+
+### 🎨 User Experience
+
+- Responsive UI
+- Loading skeletons
+- Empty states
+- Modern dashboard
+- Navbar & Footer
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS
+- React Query
+- TipTap Editor
+- React Hook Form
+- Zod
+- Lucide Icons
+
+## Backend
+
+- Next.js Route Handlers
+- Prisma ORM
+- PostgreSQL
+- NextAuth
+
+## Local Storage
+
+- Dexie.js
+
+## AI
+
+- Google Gemini API
+
+---
+
+# 📂 Project Structure
+
+```
+src
+│
+├── app
+│   ├── (auth)
+│   ├── (dashboard)
+│   └── api
+│
+├── components
+│   ├── ai
+│   ├── auth
+│   ├── collaboration
+│   ├── common
+│   ├── dashboard
+│   ├── editor
+│   ├── layout
+│   ├── sync
+│   └── ui
+│
+├── hooks
+├── lib
+├── providers
+├── services
+├── types
+├── validations
+└── prisma
+```
+
+---
+
+# ⚙️ Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/P-ayush/collaborative-document-editor.git
+```
+
+Go into the project
+
+```bash
+cd syncdocs
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Create a `.env` file
+
+```env
+DATABASE_URL=
+
+NEXTAUTH_SECRET=
+
+NEXTAUTH_URL=
+
+GEMINI_API_KEY=
+```
+
+Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+Run migrations
+
+```bash
+npx prisma migrate dev
+```
+
+Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# 🧪 Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Runs the development server.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+```
 
-## Deploy on Vercel
+Creates a production build.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Runs the production server.
+
+```bash
+npm run lint
+```
+
+Runs ESLint.
+
+---
+
+# 🔄 CI/CD
+
+This project uses **GitHub Actions** for Continuous Integration.
+
+On every push or pull request to the `main` branch, the workflow automatically:
+
+- Installs dependencies
+- Generates Prisma Client
+- Runs ESLint
+- Builds the project
+
+Deployment is handled automatically by **Vercel**.
+
+---
+
+# 🌐 Deployment
+
+The application is deployed on **Vercel**.
+
+Production Environment Variables:
+
+```env
+DATABASE_URL=
+
+NEXTAUTH_SECRET=
+
+NEXTAUTH_URL=
+
+GEMINI_API_KEY=
+```
+
+---
+
+# 🏗 Architecture
+
+```
+                User
+                  │
+                  ▼
+          Next.js Frontend
+                  │
+       ┌──────────┴──────────┐
+       ▼                     ▼
+ React Query            Dexie (Offline)
+       │                     │
+       └──────────┬──────────┘
+                  ▼
+            API Routes
+                  │
+          Prisma ORM
+                  │
+             PostgreSQL
+
+                  │
+             Gemini API
+```
+
+# 👨‍💻 Author
+
+**Ayush Prasad**
+
+GitHub: https://github.com/P-ayush
+
+LinkedIn: https://www.linkedin.com/in/ayush-prasad-51811222b/
