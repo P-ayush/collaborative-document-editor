@@ -1,54 +1,113 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, RegisterInput } from "@/validations/auth";
+
+import {
+    Eye,
+    EyeOff,
+    Loader2,
+    Lock,
+    Mail,
+    User,
+    FileText,
+} from "lucide-react";
+
+import {
+    registerSchema,
+    RegisterInput,
+} from "@/validations/auth";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 export default function RegisterForm() {
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
+    const [loading, setLoading] =
+        useState(false);
 
+    const [message, setMessage] =
+        useState("");
+
+    const [isError, setIsError] =
+        useState(false);
+
+    const [showPassword, setShowPassword] =
+        useState(false);
+    const router = useRouter();
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
     } = useForm<RegisterInput>({
-        resolver: zodResolver(registerSchema),
+        resolver: zodResolver(
+            registerSchema
+        ),
     });
 
-    async function onSubmit(data: RegisterInput) {
+    async function onSubmit(
+        data: RegisterInput
+    ) {
         try {
             setLoading(true);
             setMessage("");
+            setIsError(false);
 
-            const response = await fetch("/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
+            const response = await fetch(
+                "/api/auth/register",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
 
-            const result = await response.json();
+            const result =
+                await response.json();
 
             if (!response.ok) {
-                throw new Error(result.message);
+                throw new Error(
+                    result.message
+                );
             }
 
-            setMessage("Registration successful!");
+            setIsError(false);
+
+            setMessage(
+                "Account created successfully! Redirecting to login..."
+            );
+
             reset();
+
+            setTimeout(() => {
+                router.push("/login");
+            }, 2000);
         } catch (error) {
-            if (error instanceof Error) {
-                setMessage(error.message);
+            setIsError(true);
+
+            if (
+                error instanceof Error
+            ) {
+                setMessage(
+                    error.message
+                );
             } else {
-                setMessage("Something went wrong.");
+                setMessage(
+                    "Something went wrong."
+                );
             }
         } finally {
             setLoading(false);
@@ -56,65 +115,167 @@ export default function RegisterForm() {
     }
 
     return (
-        <Card className="w-full max-w-md">
-            <CardHeader>
-                <CardTitle>Create Account</CardTitle>
+        <Card className="w-full max-w-md rounded-2xl border shadow-2xl">
+            <CardHeader className="space-y-5 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600">
+                    <FileText className="h-8 w-8 text-white" />
+                </div>
+
+                <div>
+                    <CardTitle className="text-3xl font-bold">
+                        Create Account
+                    </CardTitle>
+
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Join SyncDocs and
+                        start collaborating.
+                    </p>
+                </div>
             </CardHeader>
 
             <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                    <div>
+                <form
+                    onSubmit={handleSubmit(
+                        onSubmit
+                    )}
+                    className="space-y-5"
+                >
+                    <div className="space-y-2">
                         <Label>Name</Label>
 
-                        <Input
-                            placeholder="John Doe"
-                            {...register("name")}
-                        />
+                        <div className="relative">
+                            <User className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
 
-                        <p className="text-sm text-red-500 mt-1">
-                            {errors.name?.message}
-                        </p>
+                            <Input
+                                placeholder="John Doe"
+                                className="pl-10"
+                                {...register(
+                                    "name"
+                                )}
+                            />
+                        </div>
+
+                        {errors.name && (
+                            <p className="text-sm text-red-500">
+                                {
+                                    errors.name
+                                        .message
+                                }
+                            </p>
+                        )}
                     </div>
 
-                    <div>
+                    <div className="space-y-2">
                         <Label>Email</Label>
 
-                        <Input
-                            type="email"
-                            placeholder="john@example.com"
-                            {...register("email")}
-                        />
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
 
-                        <p className="text-sm text-red-500 mt-1">
-                            {errors.email?.message}
-                        </p>
+                            <Input
+                                type="email"
+                                placeholder="you@example.com"
+                                className="pl-10"
+                                {...register(
+                                    "email"
+                                )}
+                            />
+                        </div>
+
+                        {errors.email && (
+                            <p className="text-sm text-red-500">
+                                {
+                                    errors.email
+                                        .message
+                                }
+                            </p>
+                        )}
                     </div>
 
-                    <div>
-                        <Label>Password</Label>
+                    <div className="space-y-2">
+                        <Label>
+                            Password
+                        </Label>
 
-                        <Input
-                            type="password"
-                            placeholder="********"
-                            {...register("password")}
-                        />
+                        <div className="relative">
+                            <Lock className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
 
-                        <p className="text-sm text-red-500 mt-1">
-                            {errors.password?.message}
-                        </p>
+                            <Input
+                                type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                }
+                                placeholder="••••••••"
+                                className="pl-10 pr-10"
+                                {...register(
+                                    "password"
+                                )}
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword(
+                                        !showPassword
+                                    )
+                                }
+                                className="absolute right-3 top-3 text-muted-foreground hover:text-black"
+                            >
+                                {showPassword ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
+                        </div>
+
+                        {errors.password && (
+                            <p className="text-sm text-red-500">
+                                {
+                                    errors
+                                        .password
+                                        .message
+                                }
+                            </p>
+                        )}
                     </div>
 
                     {message && (
-                        <p className="text-sm text-center">{message}</p>
+                        <div
+                            className={`rounded-lg border p-3 text-sm ${isError
+                                ? "border-red-300 bg-red-50 text-red-700"
+                                : "border-green-300 bg-green-50 text-green-700"
+                                }`}
+                        >
+                            {message}
+                        </div>
                     )}
 
                     <Button
-                        className="w-full"
+                        className="h-11 w-full"
                         disabled={loading}
                         type="submit"
                     >
-                        {loading ? "Creating..." : "Create Account"}
+                        {loading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Creating...
+                            </>
+                        ) : (
+                            "Create Account"
+                        )}
                     </Button>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                        Already have an
+                        account?{" "}
+                        <Link
+                            href="/login"
+                            className="font-semibold text-blue-600 hover:underline"
+                        >
+                            Sign In
+                        </Link>
+                    </p>
                 </form>
             </CardContent>
         </Card>
