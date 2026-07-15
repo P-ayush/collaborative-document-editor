@@ -5,7 +5,7 @@ export interface SyncQueue {
     id?: number;
     documentId: string;
     operation: "CREATE" | "UPDATE" | "DELETE";
-    payload: any;
+    payload: LocalDocument | Record<string, unknown>;
     createdAt: Date;
 }
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { FileText, LayoutDashboard, Sparkles, LogOut } from "lucide-react";
+import { FileText, LayoutDashboard, LogOut } from "lucide-react";
 
 import ConnectionStatus from "@/components/common/ConnectionStatus";
 import { Button } from "@/components/ui/button";

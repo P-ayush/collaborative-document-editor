@@ -46,7 +46,7 @@ export default function DocumentPage() {
                     </h2>
 
                     <p className="mt-2 text-muted-foreground">
-                        The document may have been deleted or you don't have access.
+                        The document may have been deleted or you don&apos;t have access.
                     </p>
                 </div>
             </main>

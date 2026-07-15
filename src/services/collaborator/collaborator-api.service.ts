@@ -5,6 +5,15 @@ interface AddCollaboratorPayload {
     email: string;
     role: "EDITOR" | "VIEWER";
 }
+interface Collaborator {
+    id: string;
+    role: "OWNER" | "EDITOR" | "VIEWER";
+    user: {
+        id: string;
+        name: string;
+        email: string;
+    };
+}
 
 interface UpdateCollaboratorPayload {
     role: "EDITOR" | "VIEWER";
@@ -13,7 +22,7 @@ interface UpdateCollaboratorPayload {
 export function getCollaborators(documentId: string) {
     return api<{
         success: boolean;
-        data: any[];
+        data: Collaborator[];
     }>(`/api/collaborators?documentId=${documentId}`);
 }
 
@@ -22,7 +31,7 @@ export function addCollaborator(
 ) {
     return api<{
         success: boolean;
-        data: any;
+        data: Collaborator;
     }>("/api/collaborators", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -35,7 +44,7 @@ export function updateCollaborator(
 ) {
     return api<{
         success: boolean;
-        data: any;
+        data: Collaborator;
     }>(`/api/collaborators/${collaboratorId}`, {
         method: "PATCH",
         body: JSON.stringify(payload),
