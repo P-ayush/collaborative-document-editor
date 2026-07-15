@@ -19,7 +19,6 @@ SyncDocs enables users to create, edit, collaborate, and manage documents with o
 
 - Create documents
 - Rename documents
-- Delete documents
 - Search documents
 - Pagination
 
