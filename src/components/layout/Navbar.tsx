@@ -31,14 +31,6 @@ export default function Navbar() {
                         <LayoutDashboard className="h-4 w-4" />
                         Dashboard
                     </Link>
-
-                    <Link
-                        href="/ai"
-                        className="flex items-center gap-2 text-sm hover:text-primary"
-                    >
-                        <Sparkles className="h-4 w-4" />
-                        AI
-                    </Link>
                 </nav>
 
                 <div className="flex items-center gap-4">

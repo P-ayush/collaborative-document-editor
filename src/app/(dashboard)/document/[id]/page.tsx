@@ -28,6 +28,7 @@ export default function DocumentPage() {
                 document={{
                     id: document.id,
                     title: document.title,
+                    content: document.content,
                     currentVersion: document.version,
                 }}
             />

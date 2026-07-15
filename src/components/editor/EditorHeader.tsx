@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 
 import ShareDialog from "@/components/collaboration/ShareDialog";
-import ConnectionStatus from "@/components/common/ConnectionStatus";
 import VersionHistoryDialog from "@/components/editor/VersionHistoryDialog";
+import AISummaryButton from "@/components/ai/AISummaryButton";
 
 import { useUpdateDocument } from "@/hooks/document/useUpdateDocument";
 
@@ -14,6 +14,7 @@ interface Props {
     document: {
         id: string;
         title: string;
+        content: Record<string, unknown>;
         currentVersion: number;
     };
 }
@@ -58,9 +59,7 @@ export default function EditorHeader({
                     }
                     onBlur={saveTitle}
                     onKeyDown={(e) => {
-                        if (
-                            e.key === "Enter"
-                        ) {
+                        if (e.key === "Enter") {
                             saveTitle();
                         }
                     }}
@@ -76,7 +75,11 @@ export default function EditorHeader({
             </div>
 
             <div className="flex items-center gap-3">
-                <ConnectionStatus />
+                <AISummaryButton
+                    content={JSON.stringify(
+                        document.content
+                    )}
+                />
 
                 <VersionHistoryDialog
                     documentId={document.id}
